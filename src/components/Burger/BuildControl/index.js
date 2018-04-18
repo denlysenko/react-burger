@@ -5,10 +5,15 @@ import classes from './styles.css';
 const buildControl = props => (
   <div className={classes.BuildControl}>
     <div className={classes.Label}>{props.label}</div>
-    <button type="button" className={classes.Less}>
+    <button
+      type="button"
+      className={classes.Less}
+      onClick={props.removed}
+      disabled={props.disabled}
+    >
       Less
     </button>
-    <button type="button" className={classes.More}>
+    <button type="button" className={classes.More} onClick={props.added}>
       More
     </button>
   </div>
