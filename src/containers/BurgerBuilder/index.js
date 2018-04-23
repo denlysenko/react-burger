@@ -18,17 +18,24 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: false
   };
+
+  componentDidMount() {
+    axios
+      .get('https://react-my-burger-62178.firebaseio.com/ingredients.json')
+      .then(response => {
+        this.setState({ ingredients: response.data });
+      })
+      .catch(err => {
+        this.setState({ error: true });
+      });
+  }
 
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -68,11 +75,9 @@ class BurgerBuilder extends Component {
       .post('/orders.json', order)
       .then(response => {
         this.setState({ loading: false, purchasing: false });
-        console.log(response);
       })
       .catch(err => {
         this.setState({ loading: false, purchasing: false });
-        console.log(err);
       });
   };
 
@@ -121,11 +126,8 @@ class BurgerBuilder extends Component {
       />
     );
 
-    return (
+    const burger = this.state.ingredients ? (
       <Aux>
-        <Modal show={this.state.purchasing} modalClosed={this.cancelPurchase}>
-          {orderSummary}
-        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           price={this.state.totalPrice}
@@ -135,6 +137,19 @@ class BurgerBuilder extends Component {
           removed={this.removeIngredient}
           ordered={this.purchase}
         />
+      </Aux>
+    ) : this.state.error ? (
+      <p>Ingredients can't be loaded!</p>
+    ) : (
+      <Spinner />
+    );
+
+    return (
+      <Aux>
+        <Modal show={this.state.purchasing} modalClosed={this.cancelPurchase}>
+          {this.state.ingredients ? orderSummary : null}
+        </Modal>
+        {burger}
       </Aux>
     );
   }
