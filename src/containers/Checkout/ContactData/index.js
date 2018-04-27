@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import axios from '../../../axios-orders';
 import Button from '../../../components/UI/Button';
 import Input from '../../../components/UI/Input';
 import Spinner from '../../../components/UI/Spinner';
+import withErrorHandler from '../../../hoc/withErrorHandler';
+import * as actions from '../../../store/actions';
 import classes from './styles.css';
 
 class ContactData extends Component {
@@ -109,11 +110,11 @@ class ContactData extends Component {
     }
 
     if (rules.minLength) {
-      isValid = value.lenght >= rules.minLength && isValid;
+      isValid = value.length >= rules.minLength && isValid;
     }
 
     if (rules.maxLength) {
-      isValid = value.lenght <= rules.maxLength && isValid;
+      isValid = value.length <= rules.maxLength && isValid;
     }
 
     return isValid;
@@ -140,7 +141,6 @@ class ContactData extends Component {
 
   saveOrder = event => {
     event.preventDefault();
-    this.setState({ loading: true });
 
     const orderData = {};
 
@@ -154,15 +154,7 @@ class ContactData extends Component {
       orderData
     };
 
-    axios
-      .post('/orders.json', order)
-      .then(response => {
-        this.setState({ loading: false });
-        this.props.history.push('/');
-      })
-      .catch(err => {
-        this.setState({ loading: false });
-      });
+    this.props.completeOrder(order);
   };
 
   render() {
@@ -175,7 +167,7 @@ class ContactData extends Component {
       });
     }
 
-    return this.state.loading ? (
+    return this.props.loading ? (
       <Spinner />
     ) : (
       <div className={classes.ContactData}>
@@ -204,9 +196,18 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    price: state.totalPrice
+    ingredients: state.builder.ingredients,
+    price: state.builder.totalPrice,
+    loading: state.order.loading
   };
 };
 
-export default connect(mapStateToProps)(withRouter(ContactData));
+const mapDispatchToProps = dispatch => {
+  return {
+    completeOrder: order => dispatch(actions.saveOrder(order))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withErrorHandler(ContactData, axios)
+);
