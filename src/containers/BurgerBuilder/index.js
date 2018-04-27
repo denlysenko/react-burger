@@ -13,20 +13,11 @@ import * as actions from '../../store/actions';
 
 class BurgerBuilder extends Component {
   state = {
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
   };
 
   componentDidMount() {
-    // axios
-    //   .get('/ingredients.json')
-    //   .then(response => {
-    //     this.setState({ ingredients: response.data });
-    //   })
-    //   .catch(err => {
-    //     this.setState({ error: true });
-    //   });
+    this.props.fetchIngredients();
   }
 
   updatePurchaseState(ingredients) {
@@ -56,17 +47,6 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    const orderSummary = this.state.loading ? (
-      <Spinner />
-    ) : (
-      <OrderSummary
-        ingredients={this.props.ingredients}
-        price={this.props.totalPrice}
-        cancelled={this.cancelPurchase}
-        continued={this.continuePurchase}
-      />
-    );
-
     const burger = this.props.ingredients ? (
       <Aux>
         <Burger ingredients={this.props.ingredients} />
@@ -79,7 +59,7 @@ class BurgerBuilder extends Component {
           ordered={this.purchase}
         />
       </Aux>
-    ) : this.state.error ? (
+    ) : this.props.error ? (
       <p>Ingredients can't be loaded!</p>
     ) : (
       <Spinner />
@@ -88,7 +68,14 @@ class BurgerBuilder extends Component {
     return (
       <Aux>
         <Modal show={this.state.purchasing} modalClosed={this.cancelPurchase}>
-          {this.props.ingredients ? orderSummary : null}
+          {this.props.ingredients ? (
+            <OrderSummary
+              ingredients={this.props.ingredients}
+              price={this.props.totalPrice}
+              cancelled={this.cancelPurchase}
+              continued={this.continuePurchase}
+            />
+          ) : null}
         </Modal>
         {burger}
       </Aux>
@@ -101,14 +88,16 @@ const mapDispatchToProps = dispatch => {
     addIngredient: ingredientName =>
       dispatch(actions.addIngredient(ingredientName)),
     removeIngredient: ingredientName =>
-      dispatch(actions.removeIngredient(ingredientName))
+      dispatch(actions.removeIngredient(ingredientName)),
+    fetchIngredients: () => dispatch(actions.fetchIngredients())
   };
 };
 
 const mapStateToProps = state => {
   return {
     ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    totalPrice: state.totalPrice,
+    error: state.error
   };
 };
 
