@@ -41,3 +41,47 @@ export const saveOrder = order => {
       });
   };
 };
+
+export const fetchOrders = () => {
+  return {
+    type: actions.FETCH_ORDERS
+  };
+};
+
+export const fetchOrdersSuccess = payload => {
+  return {
+    type: actions.FETCH_ORDERS_SUCCESS,
+    payload
+  };
+};
+
+export const fetchOrdersFail = payload => {
+  return {
+    type: actions.FETCH_ORDERS_FAIL,
+    payload
+  };
+};
+
+export const getOrders = () => {
+  return dispatch => {
+    dispatch(fetchOrders());
+
+    axios
+      .get('/orders.json')
+      .then(response => {
+        const orders = [];
+
+        for (const key in response.data) {
+          orders.push({
+            ...response.data[key],
+            id: key
+          });
+        }
+
+        dispatch(fetchOrdersSuccess(orders));
+      })
+      .catch(err => {
+        dispatch(fetchOrdersFail(err));
+      });
+  };
+};
