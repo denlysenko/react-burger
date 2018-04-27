@@ -99,9 +99,9 @@ class BurgerBuilder extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     addIngredient: ingredientName =>
-      dispatch({ type: actions.ADD_INGREDIENT, payload: ingredientName }),
+      dispatch(actions.addIngredient(ingredientName)),
     removeIngredient: ingredientName =>
-      dispatch({ type: actions.REMOVE_INGREDIENT, payload: ingredientName })
+      dispatch(actions.removeIngredient(ingredientName))
   };
 };
 
