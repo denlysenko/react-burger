@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
-import Auth from './containers/Auth';
 import Logout from './containers/Auth/Logout';
 import BurgerBuilder from './containers/BurgerBuilder';
-import Checkout from './containers/Checkout';
 import Layout from './containers/Layout';
-import Orders from './containers/Orders';
+import asyncComponent from './hoc/asyncComponent';
 import * as actions from './store/actions';
+
+const asyncCheckout = asyncComponent(() => import('./containers/Checkout'));
+const asyncOrders = asyncComponent(() => import('./containers/Orders'));
+const asyncAuth = asyncComponent(() => import('./containers/Auth'));
 
 class App extends Component {
   componentDidMount() {
@@ -20,12 +22,12 @@ class App extends Component {
       <div>
         <Layout>
           <Switch>
-            <Route path="/auth" component={Auth} />
+            <Route path="/auth" component={asyncAuth} />
             {this.props.isAuthenticated && (
-              <Route path="/checkout" component={Checkout} />
+              <Route path="/checkout" component={asyncCheckout} />
             )}
             {this.props.isAuthenticated && (
-              <Route path="/orders" component={Orders} />
+              <Route path="/orders" component={asyncOrders} />
             )}
             {this.props.isAuthenticated && (
               <Route path="/logout" component={Logout} />
