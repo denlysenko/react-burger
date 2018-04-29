@@ -4,7 +4,7 @@ import classes from './styles.css';
 
 const button = props => (
   <button
-    {...props}
+    type={props.type || 'submit'}
     className={[classes.Button, classes[props.btnType]].join(' ')}
     onClick={props.clicked}
     disabled={props.disabled}

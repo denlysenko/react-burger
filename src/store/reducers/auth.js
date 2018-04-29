@@ -4,7 +4,8 @@ const initialState = {
   token: null,
   userId: null,
   error: null,
-  loading: false
+  loading: false,
+  redirectPath: '/'
 };
 
 const reducer = (state = initialState, action) => {
@@ -32,6 +33,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload
+      };
+    }
+
+    case actions.SET_REDIRECT_PATH: {
+      return {
+        ...state,
+        redirectPath: action.payload
       };
     }
 
