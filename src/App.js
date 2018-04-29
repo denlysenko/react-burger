@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
+import Auth from './containers/Auth';
 import BurgerBuilder from './containers/BurgerBuilder';
 import Checkout from './containers/Checkout';
 import Layout from './containers/Layout';
@@ -14,6 +15,7 @@ class App extends Component {
           <Route path="/" exact component={BurgerBuilder} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/orders" component={Orders} />
+          <Route path="/auth" component={Auth} />
         </Layout>
       </div>
     );
