@@ -27,12 +27,12 @@ export const initOrder = () => {
   };
 };
 
-export const saveOrder = order => {
+export const saveOrder = (order, token) => {
   return dispatch => {
     dispatch(completeOrder());
 
     axios
-      .post('/orders.json', order)
+      .post(`/orders.json?auth=${token}`, order)
       .then(response => {
         dispatch(completeOrderSuccess({ ...order, id: response.data.name }));
       })
@@ -62,12 +62,12 @@ export const fetchOrdersFail = payload => {
   };
 };
 
-export const getOrders = () => {
+export const getOrders = token => {
   return dispatch => {
     dispatch(fetchOrders());
 
     axios
-      .get('/orders.json')
+      .get(`/orders.json?auth=${token}`)
       .then(response => {
         const orders = [];
 

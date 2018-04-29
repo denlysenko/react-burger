@@ -154,7 +154,7 @@ class ContactData extends Component {
       orderData
     };
 
-    this.props.completeOrder(order);
+    this.props.completeOrder(order, this.props.token);
   };
 
   render() {
@@ -198,13 +198,14 @@ const mapStateToProps = state => {
   return {
     ingredients: state.builder.ingredients,
     price: state.builder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    token: state.auth.token
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    completeOrder: order => dispatch(actions.saveOrder(order))
+    completeOrder: (order, token) => dispatch(actions.saveOrder(order, token))
   };
 };
 
