@@ -11,3 +11,7 @@ export const COMPLETE_ORDER_FAIL = 'COMPLETE_ORDER_FAIL';
 export const FETCH_ORDERS = 'FETCH_ORDERS';
 export const FETCH_ORDERS_SUCCESS = 'FETCH_ORDERS_SUCCESS';
 export const FETCH_ORDERS_FAIL = 'FETCH_ORDERS_FAIL';
+
+export const AUTH = 'AUTH';
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_FAIL = 'AUTH_FAIL';

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
+import * as actions from '../../store/actions';
 import classes from './styles.css';
 
 
@@ -79,6 +81,12 @@ class Auth extends Component {
     this.setState({ controls });
   };
 
+  submit = event => {
+    event.preventDefault();
+    const { email, password } = this.state.controls;
+    this.props.authenticate(email.value, password.value);
+  };
+
   render() {
     const formElementsArray = [];
 
@@ -91,7 +99,7 @@ class Auth extends Component {
 
     return (
       <div className={classes.Auth}>
-        <form>
+        <form onSubmit={this.submit}>
           {formElementsArray.map(el => (
             <Input
               key={el.id}
@@ -111,4 +119,10 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+const mapDispatchToProps = dispatch => {
+  return {
+    authenticate: (email, password) => dispatch(actions.doAuth(email, password))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Auth);
