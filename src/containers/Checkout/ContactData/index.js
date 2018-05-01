@@ -187,7 +187,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    completeOrder: (order, token) => dispatch(actions.saveOrder(order, token))
+    completeOrder: (order, token) =>
+      dispatch(actions.completeOrder({ order, token }))
   };
 };
 

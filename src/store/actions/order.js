@@ -1,4 +1,3 @@
-import axios from '../../axios-orders';
 import * as actions from '../actions/types';
 
 export const completeOrderSuccess = payload => {
@@ -15,9 +14,10 @@ export const completeOrderFail = payload => {
   };
 };
 
-export const completeOrder = () => {
+export const completeOrder = payload => {
   return {
-    type: actions.COMPLETE_ORDER
+    type: actions.COMPLETE_ORDER,
+    payload
   };
 };
 
@@ -27,24 +27,10 @@ export const initOrder = () => {
   };
 };
 
-export const saveOrder = (order, token) => {
-  return dispatch => {
-    dispatch(completeOrder());
-
-    axios
-      .post(`/orders.json?auth=${token}`, order)
-      .then(response => {
-        dispatch(completeOrderSuccess({ ...order, id: response.data.name }));
-      })
-      .catch(err => {
-        dispatch(completeOrderFail(err));
-      });
-  };
-};
-
-export const fetchOrders = () => {
+export const fetchOrders = payload => {
   return {
-    type: actions.FETCH_ORDERS
+    type: actions.FETCH_ORDERS,
+    payload
   };
 };
 
@@ -59,29 +45,5 @@ export const fetchOrdersFail = payload => {
   return {
     type: actions.FETCH_ORDERS_FAIL,
     payload
-  };
-};
-
-export const getOrders = (token, userId) => {
-  return dispatch => {
-    dispatch(fetchOrders());
-
-    axios
-      .get(`/orders.json?auth=${token}&orderBy="userId"&equalTo="${userId}"`)
-      .then(response => {
-        const orders = [];
-
-        for (const key in response.data) {
-          orders.push({
-            ...response.data[key],
-            id: key
-          });
-        }
-
-        dispatch(fetchOrdersSuccess(orders));
-      })
-      .catch(err => {
-        dispatch(fetchOrdersFail(err));
-      });
   };
 };
