@@ -11,7 +11,7 @@ import thunk from 'redux-thunk';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import reducer from './store/reducers';
-import { watchAuth } from './store/sagas';
+import { watchAuth, watchBuilder } from './store/sagas';
 
 const composeEnhancers =
   process.env.NODE_ENV === 'development'
@@ -26,6 +26,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchBuilder);
 
 const app = (
   <Provider store={store}>
